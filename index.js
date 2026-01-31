@@ -1,9 +1,12 @@
 import express from "express"
 import dotenv from "dotenv"
 import { checkDBConnection } from "./utils/dbHealthCheck.js"
+import { loggerMiddleware } from "./middlewares/logger.middleware.js"
+import { notFound } from "./middlewares/notFound.js"
 dotenv.config()
 const app = express()
 app.use(express.json())
+app.use(loggerMiddleware)
 const startServer = async () => {
     const isDBConnected = await checkDBConnection()
     if(!isDBConnected){
@@ -16,3 +19,4 @@ const startServer = async () => {
     })
 }
 startServer()
+app.use(notFound)
